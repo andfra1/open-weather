@@ -32,14 +32,14 @@ const EachDay = (props) => (
 const DaysBar = (props) => {
     return (
         <div className="days">
-            {console.log(props.data.list)}
+            {/*{console.log(props.data)}*/}
             {props.data.list.map((val, i) => (
                 i % 8 === 0 ?
-                <EachDay dt={dayName[new Date(val.dt_txt).getDay()]}
-                         tempmax={Math.round(val.main.temp_max)}
-                         tempmin={Math.round(val.main.temp_min)}
-                         key={val.dt} index={i}/>
-                : false
+                    <EachDay dt={dayName[new Date(val.dt_txt).getDay()]}
+                             tempmax={Math.round(val.main.temp_max)}
+                             tempmin={Math.round(val.main.temp_min)}
+                             key={val.dt} index={i}/>
+                    : false
             ))}
         </div>
     )

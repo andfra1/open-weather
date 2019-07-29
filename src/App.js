@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 //import {BrowserRouter as Router, Route, Link} from "react-router-component";
 import DaysBar from './components/days'
-import Graph from './components/graph'
+import GraphBar from './components/graph'
 import './App.css';
 
 const apikey = '5404b91a6bddc968b714487791906104';
@@ -16,68 +17,67 @@ class App extends Component {
             isLoading: false,
             error: null,
             data: null,
-            dateNow: new Date().getTime(),
-            dayNumber: new Date().getDay()
         }
 
+        this.response = '';
         // this.handleForm = this.handleForm.bind(this);
         // this.query = this.query.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        console.log('component did mount here!!');
         this.setState({
             isLoading: true
         })
         if (window.localStorage.getItem('days') !== null) {
             this.setState({
                 data: JSON.parse(window.localStorage.getItem('days')),
-                isLoading: false
+                isLoading: 'a'
             })
         } else {
-            fetch(API)
+            axios(API)
                 .then(response => {
                     this.setState({
-                        isLoading: false
-                    })
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        console.log('err', response);
-                        throw new Error('Something went wrong ...');
-                    }
+                        //data,
+                        data: response.data,
+                        isLoading: 'b'
+                    });
+                    window.localStorage.setItem('days', JSON.stringify(response.data))
                 })
-                .then(
-                    data => this.setState({
-                            data
-                        },
-                        window.localStorage.setItem('days', JSON.stringify(data)),
-                    ))
                 .catch(error => this.setState({
-                    error,
-                    isLoading: false
-                },
-                    console.log('this.state.error', this.state.error)
+                        error,
+                        isLoading: 'c'
+                    },
+                    console.log('this.state.error: ', this.state.error)
                 ));
             //console.log(window.localStorage.getItem('days'))
         }
     }
 
-    render() {
 
-        const {
-            data,
-            dayNumber
-        } = this.state;
-        return (
-            <section>
-                <div className="container">
-                    <div className="app">
-                        <DaysBar data={data} daynumber={dayNumber}/>
-                        <Graph/>
+    render() {
+        if (this.state.data !== null && this.state.data !== undefined) {
+            return (
+                <section>
+                    <div className="container">
+                        <div className="app">
+                            <DaysBar data={this.state.data}/>
+                            <GraphBar data={this.state.data}/>
+                        </div>
                     </div>
-                </div>
-            </section>
-        );
+                </section>
+            )
+        } else {
+            return (
+                <section>
+                    <div className="container">
+                        <div className="app">
+                            Wait...
+                        </div>
+                    </div>
+                </section>
+            )
+        }
     }
 }
 
