@@ -21,3 +21,6 @@ yarn-error.log*
 
 #code editor
 .idea
+
+#gulp
+_gulp/node_modules
